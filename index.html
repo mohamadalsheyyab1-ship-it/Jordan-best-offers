@@ -5,82 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>عروض الأردن</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #111827;
-      color: #e5e7eb;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      padding: 20px;
-      background: #1f2937;
-    }
-    h1 {
-      margin: 0;
-    }
-    .search-box {
-      width: 70%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-    }
-    .card {
-      background: #1f2937;
-      padding: 16px;
-      border-radius: 12px;
-      margin: 16px;
-      display: inline-block;
-      width: 250px;
-      vertical-align: top;
-      color: #fff;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
-    a.btn {
-      display: inline-block;
-      padding: 8px 12px;
-      background: #22c55e;
-      color: #062a16;
-      border-radius: 12px;
-      text-decoration: none;
-      margin: 4px;
-    }
-    a.btn:hover {
-      background: #16a34a;
-    }
-    a.menu-btn {
-      display: block;
-      width: 220px;
-      margin: 8px auto;
-      padding: 10px;
-      background: #2563eb;
-      color: #fff;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a.menu-btn:hover {
-      background: #1d4ed8;
-    }
-    .hidden {
-      display: none;
-    }
+    body { font-family: sans-serif; background: #111827; color: #e5e7eb; margin:0; text-align:center;}
+    header { padding:20px; background:#1f2937;}
+    h1 { margin:0;}
+    .search-box { width:70%; padding:10px; border-radius:8px; border:none; font-size:16px;}
+    .card { background:#1f2937; padding:16px; border-radius:12px; margin:16px; display:inline-block; width:250px; vertical-align:top; color:#fff;}
+    .card img { width:100%; border-radius:12px; margin-bottom:12px;}
+    a.btn { display:inline-block; padding:8px 12px; background:#22c55e; color:#062a16; border-radius:12px; text-decoration:none; margin:4px;}
+    a.btn:hover { background:#16a34a;}
+    a.menu-btn { display:block; width:220px; margin:8px auto; padding:10px; background:#2563eb; color:#fff; border-radius:12px; text-decoration:none; font-weight:bold;}
+    a.menu-btn:hover { background:#1d4ed8;}
+    .hidden { display:none;}
   </style>
 </head>
 <body>
 
-<header>
-  <h1>مرحبا في موقع عروض الأردن</h1>
-</header>
+<header><h1>مرحبا في موقع عروض الأردن</h1></header>
 
 <div id="content">
-  <!-- الصفحة الرئيسية -->
   <div id="home">
     <input type="text" placeholder="ابحث عن مطعم..." class="search-box">
     <br><br>
@@ -88,51 +30,15 @@
     <a href="#" class="menu-btn" onclick="alert('مشاركة البحث غير مفعلة حالياً')">مشاركة البحث</a>
   </div>
 
-  <!-- قائمة المطاعم -->
   <div id="list" class="hidden"></div>
-
-  <!-- صفحة المطعم -->
   <div id="restaurant" class="hidden"></div>
 </div>
 
 <script>
-const offers = [
-  {
-    "name": "Cafe Barbera",
-    "offer": "اشتري 1 واحصل على الثاني مجانًا",
-    "image": "https://picsum.photos/400/300?random=1",
-    "insta": "https://www.instagram.com/cafebarbera",
-    "fb": "https://www.facebook.com/cafebarbera"
-  },
-  {
-    "name": "Talabat",
-    "offer": "عروض يومية من طلبات",
-    "image": "https://picsum.photos/400/300?random=2",
-    "insta": "https://www.instagram.com/talabat",
-    "fb": "https://www.facebook.com/talabat"
-  },
-  {
-    "name": "Shi Shawerma",
-    "offer": "خصم 15%",
-    "image": "https://picsum.photos/400/300?random=3",
-    "insta": "https://www.instagram.com/shishawerma",
-    "fb": "https://www.facebook.com/shishawerma"
-  },
-  {
-    "name": "Tom & Jerry",
-    "offer": "خصم 15%",
-    "image": "https://picsum.photos/400/300?random=4",
-    "insta": "https://www.instagram.com/tomandjerry",
-    "fb": "https://www.facebook.com/tomandjerry"
-  },
-  {
-    "name": "Papaya",
-    "offer": "عرض خاص على العصائر الطبيعية",
-    "image": "https://picsum.photos/400/300?random=5",
-    "insta": "https://www.instagram.com/papaya",
-    "fb": "https://www.facebook.com/papaya"
-  }
-];
+const sheetID = 'YOUR_SHEET_ID'; // ضع هنا الـ ID الخاص بالـ Google Sheet
+const sheetURL = `https://spreadsheets.google.com/feeds/list/${sheetID}/od6/public/values?alt=json`;
+
+let offers = [];
 
 const homeDiv = document.getElementById('home');
 const listDiv = document.getElementById('list');
@@ -147,18 +53,36 @@ function showPage(page, index=null){
   if(page==='restaurant') renderRestaurant(index);
 }
 
+// جلب البيانات من Google Sheet
+fetch(sheetURL)
+  .then(res => res.json())
+  .then(data => {
+    offers = data.feed.entry.map(item => ({
+      name: item.gsx$name.$t,
+      offer: item.gsx$offer.$t,
+      image: item.gsx$image.$t,
+      insta: item.gsx$insta.$t,
+      fb: item.gsx$fb.$t
+    }));
+  })
+  .catch(err => console.error('خطأ في جلب العروض:', err));
+
 function renderList(){
   listDiv.innerHTML = '<h1>قائمة المطاعم</h1>';
-  offers.forEach((item, index)=>{
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${item.image}" alt="${item.name}">
-      <h2>${item.name}</h2>
-      <a href="#" class="btn" onclick="showPage('restaurant', ${index})">تفاصيل العرض</a>
-    `;
-    listDiv.appendChild(card);
-  });
+  if(offers.length===0){
+    listDiv.innerHTML += '<p>جاري تحميل العروض...</p>';
+  } else {
+    offers.forEach((item, index)=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${item.image}" alt="${item.name}">
+        <h2>${item.name}</h2>
+        <a href="#" class="btn" onclick="showPage('restaurant', ${index})">تفاصيل العرض</a>
+      `;
+      listDiv.appendChild(card);
+    });
+  }
   const back = document.createElement('a');
   back.href = '#';
   back.className = 'menu-btn';
