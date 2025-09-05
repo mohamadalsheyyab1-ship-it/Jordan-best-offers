@@ -13,11 +13,12 @@ header {
 h1 {
   margin: 0;
 }
-.wrap {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
+.search-box {
+  width: 70%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
 }
 .card {
   background: #1f2937;
@@ -28,7 +29,6 @@ h1 {
   width: 250px;
   vertical-align: top;
   color: #fff;
-  text-decoration: none;
 }
 .card img {
   width: 100%;
@@ -49,7 +49,7 @@ a.btn:hover {
 }
 a.menu-btn {
   display: block;
-  width: 200px;
+  width: 220px;
   margin: 8px auto;
   padding: 10px;
   background: #2563eb;
@@ -60,9 +60,6 @@ a.menu-btn {
 }
 a.menu-btn:hover {
   background: #1d4ed8;
-}
-#content {
-  padding: 20px;
 }
 .hidden {
   display: none;
