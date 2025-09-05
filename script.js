@@ -52,14 +52,14 @@ function showPage(page, index=null){
 function renderList(){
   listDiv.innerHTML = '<h1>قائمة المطاعم</h1>';
   offers.forEach((item, index)=>{
-    const link = document.createElement('div');
-    link.className = 'card';
-    link.innerHTML = `
-      ${item.name}
-      <br>
-      <a href="#" class="btn" onclick="showPage('restaurant', ${index})">شوف العرض</a>
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${item.image}" alt="${item.name}">
+      <h2>${item.name}</h2>
+      <a href="#" class="btn" onclick="showPage('restaurant', ${index})">تفاصيل العرض</a>
     `;
-    listDiv.appendChild(link);
+    listDiv.appendChild(card);
   });
   const back = document.createElement('a');
   back.href = '#';
